@@ -29,7 +29,7 @@
 %%
 
 program:
-    | statement ';' program { eval_ast($1); }
+    | program ';' statement { eval_ast($3); }
     ;
 
 statement: NAME '=' exp  { $$ = newasgn($1, $3); }

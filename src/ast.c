@@ -73,6 +73,7 @@ struct ast *newasgn(struct symbol *s, struct ast *v)
 
 void eval_ast(struct ast *a)
 {
+    //printf("Node type: %c\n", a->nodetype);
     switch(a->nodetype)
     {
         case 'K':   emitCode(stdout, DEFINE_LITERAL, a, &mem);
@@ -83,9 +84,10 @@ void eval_ast(struct ast *a)
         case '-':   eval_ast(a->r);
                     eval_ast(a->l);
                     break;
-        case 'N':   break;
+        case 'N':   emitCode(NULL, RECALL, a, &mem);
+                    break;
         case '=':   eval_ast( ((struct symasgn *)a)->v );
-                    emitCode(stdout, ASSIGN, a, &mem);
+                    emitCode(NULL, ASSIGN, a, &mem);
                     break;
         default:    printf("Error: unknown nodetype in AST\n");
                     

@@ -10,7 +10,8 @@
 enum emitType
 {
     DEFINE_LITERAL,
-    ASSIGN
+    ASSIGN,
+    RECALL
 };
 
 // Functions to process the AST

@@ -22,7 +22,6 @@ struct symbol *lookup(char *sym)
         }
 
         if(!sp->name){
-            printf("Creating a new symbol, at address %p\n", sp);
             sp->name        = strdup(sym);
             sp->allocated   = 0;
             sp->heapAddr    = 0;

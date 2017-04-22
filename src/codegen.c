@@ -20,6 +20,9 @@ void emitCode(FILE *fp,
         case DEFINE_LITERAL: ;
             {
             struct numval *ptr = (struct numval *)a; 
+            printf("Pushing literal %d onto the stack\n", ptr->number);
+            mem->stackDepth++;
+            /*
             if(mem->stackDepth < MAX_STACK & ptr->number < 2048)
             {
                 mem->stackDepth++;
@@ -40,17 +43,21 @@ void emitCode(FILE *fp,
                
                 free(outStr);
             }
+            */
             }
             break;
         case ASSIGN: ;
             {
             struct symbol *ptr = ((struct symasgn *)a)->s; 
+            printf("Got symbol at %p\n", ptr);
+            //mem->stackDepth--;
             if(ptr->allocated)
             {
                 printf("Symbol was allocated\n");
                 printf("Going to store value from stack (%d) to %d\n", 
                     mem->stackBasePtr + mem->stackDepth,
                     ptr->heapAddr);
+                mem->stackDepth--;
             }
             else
             {
@@ -58,6 +65,24 @@ void emitCode(FILE *fp,
                 printf("Going to store value from stack (%d) to %d\n",
                     mem->stackBasePtr + mem->stackDepth,
                     mem->heapBasePtr + mem->heapDepth);
+                ptr->allocated = 1;
+                mem->heapDepth++;
+                mem->stackDepth--;
+            }
+            }
+            break;
+
+        case RECALL: ;
+            {
+            //mem->stackDepth++;
+            struct symbol *ptr = ((struct symref *)a)->s; 
+            if(ptr->allocated)
+            {
+                printf("Symbol was allocated\n");
+                printf("Going to retrieve value from %d and store on the stack (%d)\n", 
+                    ptr->heapAddr,
+                    mem->stackBasePtr + mem->stackDepth);
+                mem->stackDepth++;
             }
             }
             break;
