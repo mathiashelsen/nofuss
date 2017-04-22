@@ -3,6 +3,8 @@
 
 struct symbol {
     char *name;
+    int allocated;
+    int heapAddr;
 };
 
 #define NHASH 9997

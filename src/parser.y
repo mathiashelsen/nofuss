@@ -22,10 +22,14 @@
 %left '+' '-'
 %nonassoc '|' UMINUS
 
+%initial-action{
+    init_ast();
+};
+
 %%
 
 program:
-    | program ';' statement { eval_ast($3); }
+    | statement ';' program { eval_ast($1); }
     ;
 
 statement: NAME '=' exp  { $$ = newasgn($1, $3); }

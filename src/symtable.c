@@ -22,10 +22,10 @@ struct symbol *lookup(char *sym)
         }
 
         if(!sp->name){
-            sp->name = strdup(sym);
-            //sp->value = 0;
-            //sp->func = NULL;
-            //sp->syms = NULL;
+            printf("Creating a new symbol, at address %p\n", sp);
+            sp->name        = strdup(sym);
+            sp->allocated   = 0;
+            sp->heapAddr    = 0;
             return sp;
         }
 

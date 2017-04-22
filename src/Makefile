@@ -16,7 +16,7 @@ $(EXEC): $(OBJECTS) lexer.l parser.y
 	bison -d parser.y
 	flex -o lexer.lex.c lexer.l
 	$(CC) $(OBJECTS) -o $(EXEC)
- 
+
 # To obtain object files
 %.o: %.c
 	$(CC) -c $(CC_FLAGS) $< -o $@
