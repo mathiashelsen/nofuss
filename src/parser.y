@@ -41,5 +41,10 @@ exp: exp '+' exp    { $$ = newast('+', $1, $3); }
     | NUMBER        { $$ = newnum($1); }
     | NAME          { $$ = newref($1); }
     ;
+/*
+    | &NAME         { $$ = newptr($1); } -> look up symbol, put address on stack
+    | *(exp)        { $$ = newdeptr($2); } -> calc expression, look up value at
+        address=stack, put value on stack
+*/
 
 %%
