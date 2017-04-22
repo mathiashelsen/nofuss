@@ -16,7 +16,7 @@
 %token <d> NUMBER
 %token <s> NAME
 
-%type <a> exp 
+%type <a> statement exp
 
 %right '='
 %left '+' '-'
@@ -28,8 +28,7 @@ program:
     | program ';' statement { eval_ast($3); }
     ;
 
-statement:
-    | NAME '=' exp  { $$ = newasgn($1, $3); }
+statement: NAME '=' exp  { $$ = newasgn($1, $3); }
     ;
 
 exp: exp '+' exp    { $$ = newast('+', $1, $3); }
