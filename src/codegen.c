@@ -1,5 +1,7 @@
 #include "codegen.h"
-
+// TODO: Make sure all function operations (e.g. excluding stack increment),
+// update the status register. This will come in handy for if/else and while
+// loops
 void emitInitial(FILE *fp, struct memoryState *mem)
 {
     // We put R0 to the initial stackPtr;
