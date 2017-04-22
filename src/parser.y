@@ -43,8 +43,11 @@ exp: exp '+' exp    { $$ = newast('+', $1, $3); }
     ;
 /*
     | &NAME         { $$ = newptr($1); } -> look up symbol, put address on stack
+        MOV x %d A *R0
     | *(exp)        { $$ = newdeptr($2); } -> calc expression, look up value at
         address=stack, put value on stack
+        MOV x *R0 A R1
+        MOV x *R1 A *R0
 */
 
 %%
