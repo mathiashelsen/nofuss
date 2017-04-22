@@ -29,10 +29,10 @@
 %%
 
 program:
-    | program ';' statement { eval_ast($3); }
+    | program statement { eval_ast($2); }
     ;
 
-statement: NAME '=' exp  { $$ = newasgn($1, $3); }
+statement: NAME '=' exp ';'  { $$ = newasgn($1, $3); }
     ;
 
 exp: exp '+' exp    { $$ = newast('+', $1, $3); }
