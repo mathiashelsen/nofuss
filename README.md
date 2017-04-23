@@ -7,6 +7,7 @@ Does not support:
 - any other datatype then signed int
 - syntax checking (it will simply say "syntax error", lovely...)
 - pretty coding: this thing (the compiler itself) uses external variables all over the place, and does not free memory after allocation
+- dynamic memory (might be interesting to implement, so lets see in the future)
 
 It will support (hopefully):
 - if/else construction
