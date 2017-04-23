@@ -9,11 +9,12 @@
 #include "symtable.h"
 
 extern int yylineno;
+extern FILE *fp;
 void yyerror(char *s, ...);
 
 int main(int argc, char **argv)
 { 
-    FILE *fp = NULL;
+    fp = NULL;
 
     if(argc == 1)
     {

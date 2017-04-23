@@ -2,7 +2,7 @@
 // TODO: Make sure all function operations (e.g. excluding stack increment),
 // update the status register. This will come in handy for if/else and while
 // loops
-void emitInitial(FILE *fp, struct memoryState *mem)
+void emitInitial(struct memoryState *mem)
 {
     // We put R0 to the initial stackPtr;
     char *outStr = malloc(sizeof(char)*1024);
@@ -10,9 +10,10 @@ void emitInitial(FILE *fp, struct memoryState *mem)
     memset(outStr, 0, sizeof(outStr));
     sprintf(outStr, "MOV\tR0\t%d A R0\n", mem->stackBasePtr);
     fprintf(fp, "%s", outStr);
+    fprintf(fp, "MOV\tR0\t%d\tA\tR4\n", mem->heapBasePtr);
 }
 
-void emitCode(FILE *fp, 
+void emitCode(
     enum emitType type, 
     struct ast *a,
     struct memoryState *mem)
@@ -22,73 +23,128 @@ void emitCode(FILE *fp,
         case DEFINE_LITERAL: ;
             {
             struct numval *ptr = (struct numval *)a; 
-            printf("Pushing literal %d onto the stack\n", ptr->number);
+            fprintf(fp, "// Pushing literal %d onto the stack\n", ptr->number);
             mem->stackDepth++;
-            /*
+            
             if(mem->stackDepth < MAX_STACK & ptr->number < 2048)
             {
                 mem->stackDepth++;
-                char *outStr = malloc(sizeof(char)*1024);
-                memset(outStr, 0, sizeof(outStr));
 
                 fprintf(fp, "// Incrementing stack pointer and writing value to MEM\n");
-                sprintf(outStr, "ADD\tR0\t1\tA\tR0\n");
-                fprintf(fp, "%s", outStr);
+                fprintf(fp, "ADD\tR0\t1\tA\tR0\n");
 
                 // Write value to old pointer
-                memset(outStr, 0, sizeof(outStr));
-                sprintf(outStr, "MOV\tR0\t%d\tA\t*R0\n", ptr->number);
-                fprintf(fp, "%s", outStr);
+                fprintf(fp, "MOV\tR0\t%d\tA\t*R0 +cmp\n", ptr->number);
 
                 fprintf(fp, "%s", NOP_STR);
                 fprintf(fp, "%s", NOP_STR);
                
-                free(outStr);
             }
-            */
+           
             }
             break;
         case ASSIGN: ;
             {
             struct symbol *ptr = ((struct symasgn *)a)->s; 
-            printf("Got symbol at %p\n", ptr);
-            //mem->stackDepth--;
             if(ptr->allocated)
             {
-                printf("Symbol was allocated\n");
-                printf("Going to store value from stack (%d) to %d\n", 
+                fprintf(fp, "// Going to store value from stack (%d) to %d\n", 
                     mem->stackBasePtr + mem->stackDepth,
                     ptr->heapAddr);
+
                 mem->stackDepth--;
+                
+                fprintf(fp, "ADD\tR4\t%d\tA\tR1\n", ptr->heapAddr - mem->heapBasePtr);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "MOV\tR0\t*R0\tA\t*R1 +cmp\n");
+                fprintf(fp, "SUBS\tR0\t1\tA\tR0\n");
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
             }
             else
             {
-                printf("Have to allocate symbol on the heap\n"); 
-                printf("Going to store value from stack (%d) to %d\n",
+                fprintf(fp, "// Going to store value from stack (%d) to %d\n",
                     mem->stackBasePtr + mem->stackDepth,
                     mem->heapBasePtr + mem->heapDepth);
                 ptr->allocated = 1;
-                mem->heapDepth++;
-                mem->stackDepth--;
+                ptr->heapAddr = mem->heapBasePtr + mem->heapDepth;                
+
+                fprintf(fp, "ADD\tR4\t%d\tA\tR1\n", mem->heapDepth);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "MOV\tR0\t*R0\tA\t*R1 +cmp\n");
+                fprintf(fp, "SUBS\tR0\t1\tA\tR0\n");
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+
+                (mem->heapDepth)++;
+                (mem->stackDepth)--;
+
+
             }
             }
             break;
 
         case RECALL: ;
             {
-            //mem->stackDepth++;
             struct symbol *ptr = ((struct symref *)a)->s; 
             if(ptr->allocated)
             {
-                printf("Symbol was allocated\n");
-                printf("Going to retrieve value from %d and store on the stack (%d)\n", 
+                fprintf(fp, "// Going to retrieve value from %d and store on the stack (%d)\n", 
                     ptr->heapAddr,
                     mem->stackBasePtr + mem->stackDepth);
-                mem->stackDepth++;
+                (mem->stackDepth)++;
+
+                fprintf(fp, "ADD\tR4\t%d\tA\tR1\n", ptr->heapAddr - mem->heapBasePtr);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "MOV\tR0\t*R1\tA\t*R0 +cmp\n");
+                fprintf(fp, "ADDS\tR0\t1\tA\tR0\n");
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+            }
+            else
+            {
+                yyerror("Symbol was not yet allocated and/or defined.\n");
             }
             }
             break;
+        case ADD: ;
+            {
+                (mem->stackDepth)--;
+                fprintf(fp, "// Add two values on the stack, pop one and store result on the stack\n");
+                fprintf(fp, "SUBS\tR0\t1\tA\tR0\n"); // Pop stack, R0 - 1 -> R0
+                fprintf(fp, "MOV\tR0\tR0\tA\tR1\n"); // stack+1 -> R1 
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "ADDS\t*R0\t*R1\tA\t*R0 +cmp\n"); // Math thingy -> *R0
+
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+            }   
+            break;
+        case SUB: ;
+            {
+                (mem->stackDepth)--;
+                fprintf(fp, "// Add two values on the stack, pop one and store result on the stack\n");
+                fprintf(fp, "SUBS\tR0\t1\tA\tR0\n"); // Pop stack, R0 - 1 -> R0
+                fprintf(fp, "MOV\tR0\tR0\tA\tR1\n"); // stack+1 -> R1 
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "SUBS\t*R0\t*R1\tA\t*R0 +cmp\n"); // Math thingy -> *R0
+
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+
+            }
+            break;
         default:
+            yyerror("Unknown request to emit code.\n");
             break;
     }
 };

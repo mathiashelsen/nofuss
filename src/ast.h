@@ -11,7 +11,9 @@ enum emitType
 {
     DEFINE_LITERAL,
     ASSIGN,
-    RECALL
+    RECALL,
+    ADD,
+    SUB
 };
 
 // Functions to process the AST

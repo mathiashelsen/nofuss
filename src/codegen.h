@@ -8,7 +8,9 @@
 
 #define NOP_STR "MOV\tR0\tR0\tN\tR0\n"
 
-void emitInitial(FILE *fp, struct memoryState *mem);
-void emitCode(FILE *fp, enum emitType type, struct ast *a, struct memoryState *mem);
+FILE *fp;
+
+void emitInitial(struct memoryState *mem);
+void emitCode(enum emitType type, struct ast *a, struct memoryState *mem);
 
 #endif

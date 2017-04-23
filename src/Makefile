@@ -4,7 +4,7 @@
 #
 # Declaration of variables
 CC = gcc
-CC_FLAGS = -w
+CC_FLAGS = -w -g
  
 # File names
 EXEC = nofuss

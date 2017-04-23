@@ -2,12 +2,12 @@
 
 void init_ast()
 {
-    mem.heapBasePtr     = 0x100;
+    mem.heapBasePtr     = 256;
     mem.heapDepth       = 0;
     mem.stackBasePtr    = 0;
     mem.stackDepth      = 0;
 
-    emitInitial(stdout, &mem);
+    emitInitial(&mem);
 }
 
 struct ast *newast(int nodetype, struct ast *l, struct ast *r)
@@ -76,7 +76,7 @@ void eval_ast(struct ast *a)
     //printf("Node type: %c\n", a->nodetype);
     switch(a->nodetype)
     {
-        case 'K':   emitCode(stdout, DEFINE_LITERAL, a, &mem);
+        case 'K':   emitCode(DEFINE_LITERAL, a, &mem);
                     break;
         case '+':   eval_ast(a->r);
                     eval_ast(a->l);
@@ -84,10 +84,10 @@ void eval_ast(struct ast *a)
         case '-':   eval_ast(a->r);
                     eval_ast(a->l);
                     break;
-        case 'N':   emitCode(NULL, RECALL, a, &mem);
+        case 'N':   emitCode(RECALL, a, &mem);
                     break;
         case '=':   eval_ast( ((struct symasgn *)a)->v );
-                    emitCode(NULL, ASSIGN, a, &mem);
+                    emitCode(ASSIGN, a, &mem);
                     break;
         default:    printf("Error: unknown nodetype in AST\n");
                     

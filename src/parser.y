@@ -4,7 +4,6 @@
     #include <stdint.h>
     #include "symtable.h"
     #include "ast.h"
-
 %}
 
 %union{
@@ -23,6 +22,7 @@
 %nonassoc '|' UMINUS
 
 %initial-action{
+    
     init_ast();
 };
 
