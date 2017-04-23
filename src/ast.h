@@ -35,6 +35,8 @@ struct memoryState
     int heapDepth;
     int stackBasePtr;
     int stackDepth;
+
+    int numberOfIFs;
 } mem;
 
 struct ast{
@@ -57,6 +59,13 @@ struct symasgn {
     int nodetype;
     struct symbol *s;
     struct ast *v;
+};
+
+struct astNodeIF{
+    int nodetype;
+    struct ast *cond;
+    struct ast *ifNode;
+    struct ast *elseNode;
 };
 
 #endif

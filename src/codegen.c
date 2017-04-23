@@ -148,3 +148,33 @@ void emitCode(
             break;
     }
 };
+
+void emitIfElseJmp( int i )
+{
+    fprintf(fp, "\n\n// If/else jump for If/Else number %d\n", i);
+    fprintf(fp, "MOV\tR0\t_IfLabel_%d\tNZ\tPC\n", i);
+    fprintf(fp, "MOV\tR0\t_ElseLabel_%d\tZ\tPC\n", i);
+};
+
+void emitIfFinalJmp( int i )
+{
+    fprintf(fp, "\n\n// Jump the final for If/Else number %d\n", i);
+    fprintf(fp, "MOV\tR0\t_IfFinalLabel_%d\tA\tPC\n", i);
+}
+
+void emitIfLabel( int i )
+{
+    fprintf(fp, "\n\n// IF block for If/Else number %d\n", i);
+    fprintf(fp, "#_IfLabel_%d\n\n", i);
+}
+void emitElseLabel( int i)
+{
+    fprintf(fp, "\n\n// ELSE block for If/Else number %d\n", i);
+    fprintf(fp, "#_ElseLabel_%d\n\n", i);
+}
+
+void emitIfFinalLabel( int i )
+{
+    fprintf(fp, "\n\n//Closing the If/Else number %d\n", i);
+    fprintf(fp, "#_IfFinalLabel_%d\n\n", i);
+}

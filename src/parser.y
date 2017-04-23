@@ -12,10 +12,11 @@
     struct symbol *s;
 }
 
+%token IF ELSE
 %token <d> NUMBER
 %token <s> NAME
 
-%type <a> statement exp
+%type <a> statement statementList codeblock exp
 
 %right '='
 %left '+' '-'
@@ -29,17 +30,27 @@
 %%
 
 program:
-    | program statement { eval_ast($2); }
+    | program statementList             { eval_ast($2); }
     ;
 
-statement: NAME '=' exp ';'  { $$ = newasgn($1, $3); }
+codeblock:                              { $$ = 0; }
+    | '{' statementList '}'             { $$ = $2; }
     ;
 
-exp: exp '+' exp    { $$ = newast('+', $1, $3); }
-    | exp '-' exp   { $$ = newast('-', $1, $3); }
-    | '(' exp ')'   { $$ = $2; }
-    | NUMBER        { $$ = newnum($1); }
-    | NAME          { $$ = newref($1); }
+statementList:                          { $$ = 0; }
+    | statementList statement           { $$ = newast('0', $1, $2); }
+    | statement                         { $$ = $1; }
+    ;
+
+statement: NAME '=' exp ';'             { $$ = newasgn($1, $3); }
+    | IF exp codeblock ELSE codeblock   { $$ = newAstNodeIF($2, $3, $5); }
+    ;
+
+exp: exp '+' exp                        { $$ = newast('+', $1, $3); }
+    | exp '-' exp                       { $$ = newast('-', $1, $3); }
+    | '(' exp ')'                       { $$ = $2; }
+    | NUMBER                            { $$ = newnum($1); }
+    | NAME                              { $$ = newref($1); }
     ;
 /*
     | &NAME         { $$ = newptr($1); } -> look up symbol, put address on stack
