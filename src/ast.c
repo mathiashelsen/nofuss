@@ -112,15 +112,23 @@ void eval_ast(struct ast *a)
         case '=':   eval_ast( ((struct symasgn *)a)->v );
                     emitCode(ASSIGN, a, &mem);
                     break;
-        case '?':   mem.numberOfIFs++;
+        case '?':   ;
+                    int currentLabel = mem.numberOfIFs;
+                    mem.numberOfIFs++;
+
                     eval_ast( ((struct astNodeIF *)a)->cond );
-                    emitIfElseJmp( mem.numberOfIFs-1 );
-                    emitIfLabel( mem.numberOfIFs-1 );
+
+                    emitIfElseJmp( currentLabel );
+                    emitIfLabel( currentLabel );
+
                     eval_ast( ((struct astNodeIF *)a)->ifNode );    
-                    emitIfFinalJmp( mem.numberOfIFs-1 );
-                    emitElseLabel( mem.numberOfIFs-1 );
+
+                    emitIfFinalJmp( currentLabel );
+                    emitElseLabel( currentLabel );
+
                     eval_ast( ((struct astNodeIF *)a)->elseNode );
-                    emitIfFinalLabel( mem.numberOfIFs-1 );
+
+                    emitIfFinalLabel( currentLabel );
                     break;
         default:    fprintf("Error: unknown nodetype \"%c\" in AST\n", a->nodetype);
                     
