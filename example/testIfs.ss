@@ -78,10 +78,28 @@ MOV	R0	_ElseLabel_1	Z	PC
 // IF block for If/Else number 1
 #_IfLabel_1
 
-// Pushing literal 0 onto the stack
+// Going to retrieve value from 256 and store on the stack (5)
+ADD	R4	0	A	R1
+MOV	R0	R0	N	R0
+MOV	R0	R0	N	R0
+MOV	R0	*R1	A	*R0 +cmp
+ADDS	R0	1	A	R0
+MOV	R0	R0	N	R0
+MOV	R0	R0	N	R0
+// Pushing literal 1 onto the stack
 // Incrementing stack pointer and writing value to MEM
 ADD	R0	1	A	R0
-MOV	R0	0	A	*R0 +cmp
+MOV	R0	1	A	*R0 +cmp
+MOV	R0	R0	N	R0
+MOV	R0	R0	N	R0
+// Add two values on the stack, pop one and store result on the stack
+SUBS	R0	1	A	R0
+MOV	R0	R0	A	R1
+MOV	R0	R0	N	R0
+MOV	R0	R0	N	R0
+ADDS	*R0	*R1	A	*R0 +cmp
+MOV	R0	R0	N	R0
+MOV	R0	R0	N	R0
 MOV	R0	R0	N	R0
 MOV	R0	R0	N	R0
 // Going to store value from stack (7) to 257

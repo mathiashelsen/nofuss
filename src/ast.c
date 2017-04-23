@@ -101,11 +101,13 @@ void eval_ast(struct ast *a)
                     break;
         case 'K':   emitCode(DEFINE_LITERAL, a, &mem);
                     break;
-        case '+':   eval_ast(a->r);
-                    eval_ast(a->l);
+        case '+':   eval_ast(a->l);
+                    eval_ast(a->r);
+                    emitCode(ADD, a, &mem);
                     break;
-        case '-':   eval_ast(a->r);
-                    eval_ast(a->l);
+        case '-':   eval_ast(a->l);
+                    eval_ast(a->r);
+                    emitCode(SUB, a, &mem);
                     break;
         case 'N':   emitCode(RECALL, a, &mem);
                     break;
