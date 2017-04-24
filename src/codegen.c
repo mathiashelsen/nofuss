@@ -150,6 +150,7 @@ void emitCode(
 void emitIfElseJmp( int i )
 {
     fprintf(fp, "\n\n// If/else jump for If/Else number %d\n", i);
+    fprintf(fp, "SUBS\tR0\t1\tA\tR0\n"); // Pop stack, R0 - 1 -> R0
     fprintf(fp, "MOV\tR0\tLabel_If_%d\tNZ\tPC\n", i);
     fprintf(fp, "MOV\tR0\tLabel_Else_%d\tZ\tPC\n", i);
 };
