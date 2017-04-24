@@ -2,12 +2,12 @@
 
 void init_ast()
 {
-    mem.heapBasePtr     = 256;
+    mem.heapBasePtr     = 100;
     mem.heapDepth       = 0;
     mem.stackBasePtr    = 0;
     mem.stackDepth      = 0;
 
-    mem.numberOfIFs         = 0;
+    mem.numberOfIFs     = 0;
 
     emitInitial(&mem);
 }

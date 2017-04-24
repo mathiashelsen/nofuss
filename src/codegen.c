@@ -100,7 +100,7 @@ void emitCode(
                 fprintf(fp, "%s", NOP_STR);
                 fprintf(fp, "%s", NOP_STR);
                 fprintf(fp, "MOV\tR0\t*R1\tA\t*R0 +cmp\n");
-                fprintf(fp, "ADDS\tR0\t1\tA\tR0\n");
+                fprintf(fp, "ADD\tR0\t1\tA\tR0\n");
                 fprintf(fp, "%s", NOP_STR);
                 fprintf(fp, "%s", NOP_STR);
             }
@@ -118,7 +118,7 @@ void emitCode(
                 fprintf(fp, "MOV\tR0\tR0\tA\tR1\n"); // stack+1 -> R1 
                 fprintf(fp, "%s", NOP_STR);
                 fprintf(fp, "%s", NOP_STR);
-                fprintf(fp, "ADDS\t*R0\t*R1\tA\t*R0 +cmp\n"); // Math thingy -> *R0
+                fprintf(fp, "ADD\t*R0\t*R1\tA\t*R0 +cmp\n"); // Math thingy -> *R0
 
                 fprintf(fp, "%s", NOP_STR);
                 fprintf(fp, "%s", NOP_STR);
@@ -152,29 +152,29 @@ void emitCode(
 void emitIfElseJmp( int i )
 {
     fprintf(fp, "\n\n// If/else jump for If/Else number %d\n", i);
-    fprintf(fp, "MOV\tR0\t_IfLabel_%d\tNZ\tPC\n", i);
-    fprintf(fp, "MOV\tR0\t_ElseLabel_%d\tZ\tPC\n", i);
+    fprintf(fp, "MOV\tR0\tLabel_If_%d\tNZ\tPC\n", i);
+    fprintf(fp, "MOV\tR0\tLabel_Else_%d\tZ\tPC\n", i);
 };
 
 void emitIfFinalJmp( int i )
 {
     fprintf(fp, "\n\n// Jump the final for If/Else number %d\n", i);
-    fprintf(fp, "MOV\tR0\t_IfFinalLabel_%d\tA\tPC\n", i);
+    fprintf(fp, "MOV\tR0\tLabel_IfFinal_%d\tA\tPC\n", i);
 }
 
 void emitIfLabel( int i )
 {
     fprintf(fp, "\n\n// IF block for If/Else number %d\n", i);
-    fprintf(fp, "#_IfLabel_%d\n\n", i);
+    fprintf(fp, "#label Label_If_%d\n\n", i);
 }
 void emitElseLabel( int i)
 {
     fprintf(fp, "\n\n// ELSE block for If/Else number %d\n", i);
-    fprintf(fp, "#_ElseLabel_%d\n\n", i);
+    fprintf(fp, "#label Label_Else_%d\n\n", i);
 }
 
 void emitIfFinalLabel( int i )
 {
     fprintf(fp, "\n\n//Closing the If/Else number %d\n", i);
-    fprintf(fp, "#_IfFinalLabel_%d\n\n", i);
+    fprintf(fp, "#label Label_IfFinal_%d\n\n", i);
 }
