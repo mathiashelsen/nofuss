@@ -23,13 +23,11 @@ void emitCode(
         case DEFINE_LITERAL: ;
             {
             struct numval *ptr = (struct numval *)a; 
-            fprintf(fp, "// Pushing literal %d onto the stack\n", ptr->number);
+            fprintf(fp, "// Pushing literal %d onto the stack (%d)\n", ptr->number, mem->stackDepth);
             mem->stackDepth++;
             
             if(mem->stackDepth < MAX_STACK & ptr->number < 2048)
             {
-                mem->stackDepth++;
-
                 fprintf(fp, "// Incrementing stack pointer and writing value to MEM\n");
                 fprintf(fp, "ADD\tR0\t1\tA\tR0\n");
 

@@ -1,0 +1,18 @@
+
+MOV     R0  R0  N   R0
+MOV     R0  R0  N   R0
+MOV     R0  R0  N   R0
+MOV     R0  R0  N   R0
+
+
+MOV     R0  *R4 A   R5
+ADD     R4  1   A   R2
+MOV	R0	R0	N	R0
+MOV	R0	R0	N	R0
+MOV     R0  *R2 A   R6
+MOV	R0	R0	N	R0
+MOV	R0	R0	N	R0
+MOV	R0	R0	N	R0
+MOV	R0	R0	N	R0
+MOV	R0	R0	N	R0
+MOV	R0	R0	N	R0
