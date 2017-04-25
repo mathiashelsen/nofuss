@@ -29,10 +29,10 @@ void emitCode(
             if(mem->stackDepth < MAX_STACK & ptr->number < 2048)
             {
                 fprintf(fp, "// Incrementing stack pointer and writing value to MEM\n");
-                fprintf(fp, "ADD\tR0\t1\tA\tR0\n");
 
                 // Write value to old pointer
                 fprintf(fp, "MOV\tR0\t%d\tA\t*R0 +cmp\n", ptr->number);
+                fprintf(fp, "ADD\tR0\t1\tA\tR0\n");
 
                 fprintf(fp, "%s", NOP_STR);
                 fprintf(fp, "%s", NOP_STR);
@@ -53,10 +53,10 @@ void emitCode(
                 mem->stackDepth--;
                 
                 fprintf(fp, "ADD\tR4\t%d\tA\tR1\n", ptr->heapAddr - mem->heapBasePtr);
+                fprintf(fp, "SUBS\tR0\t1\tA\tR0\n");
                 fprintf(fp, "%s", NOP_STR);
                 fprintf(fp, "%s", NOP_STR);
                 fprintf(fp, "MOV\tR0\t*R0\tA\t*R1 +cmp\n");
-                fprintf(fp, "SUBS\tR0\t1\tA\tR0\n");
                 fprintf(fp, "%s", NOP_STR);
                 fprintf(fp, "%s", NOP_STR);
             }
@@ -69,10 +69,10 @@ void emitCode(
                 ptr->heapAddr = mem->heapBasePtr + mem->heapDepth;                
 
                 fprintf(fp, "ADD\tR4\t%d\tA\tR1\n", mem->heapDepth);
+                fprintf(fp, "SUBS\tR0\t1\tA\tR0\n");
                 fprintf(fp, "%s", NOP_STR);
                 fprintf(fp, "%s", NOP_STR);
                 fprintf(fp, "MOV\tR0\t*R0\tA\t*R1 +cmp\n");
-                fprintf(fp, "SUBS\tR0\t1\tA\tR0\n");
                 fprintf(fp, "%s", NOP_STR);
                 fprintf(fp, "%s", NOP_STR);
 
