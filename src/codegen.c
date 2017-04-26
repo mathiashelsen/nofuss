@@ -146,6 +146,114 @@ void emitCode(
 
             }
             break;
+        case AND: ;
+            {
+                (mem->stackDepth)--;
+                fprintf(fp, "// Add two values on the stack, pop one and store result on the stack\n");
+                fprintf(fp, "SUBS\tR0\t2\tA\tR0\n"); // Pop stack, R0 - 1 -> R0
+                fprintf(fp, "MOV\tR0\tR0\tA\tR1\n"); // stack+1 -> R1 
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "AND\t*R0\t*R1\tA\t*R0 +cmp\n"); // Math thingy -> *R0
+                fprintf(fp, "ADD\tR0\t1\tA\tR0\n");
+
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+
+            }
+            break;
+        case OR: ;
+            {
+                (mem->stackDepth)--;
+                fprintf(fp, "// Add two values on the stack, pop one and store result on the stack\n");
+                fprintf(fp, "SUBS\tR0\t2\tA\tR0\n"); // Pop stack, R0 - 1 -> R0
+                fprintf(fp, "MOV\tR0\tR0\tA\tR1\n"); // stack+1 -> R1 
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "OR\t*R0\t*R1\tA\t*R0 +cmp\n"); // Math thingy -> *R0
+                fprintf(fp, "ADD\tR0\t1\tA\tR0\n");
+
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+
+            }
+            break;
+        case XOR: ;
+            {
+                (mem->stackDepth)--;
+                fprintf(fp, "// Add two values on the stack, pop one and store result on the stack\n");
+                fprintf(fp, "SUBS\tR0\t2\tA\tR0\n"); // Pop stack, R0 - 1 -> R0
+                fprintf(fp, "MOV\tR0\tR0\tA\tR1\n"); // stack+1 -> R1 
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "XOR\t*R0\t*R1\tA\t*R0 +cmp\n"); // Math thingy -> *R0
+                fprintf(fp, "ADD\tR0\t1\tA\tR0\n");
+
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+
+            }
+            break;
+        case BSL: ;
+            {
+                (mem->stackDepth)--;
+                fprintf(fp, "// Add two values on the stack, pop one and store result on the stack\n");
+                fprintf(fp, "SUBS\tR0\t2\tA\tR0\n"); // Pop stack, R0 - 1 -> R0
+                fprintf(fp, "MOV\tR0\tR0\tA\tR1\n"); // stack+1 -> R1 
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "BSL\t*R0\t*R1\tA\t*R0 +cmp\n"); // Math thingy -> *R0
+                fprintf(fp, "ADD\tR0\t1\tA\tR0\n");
+
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+
+            }
+            break;
+        case BSR: ;
+            {
+                (mem->stackDepth)--;
+                fprintf(fp, "// Add two values on the stack, pop one and store result on the stack\n");
+                fprintf(fp, "SUBS\tR0\t2\tA\tR0\n"); // Pop stack, R0 - 1 -> R0
+                fprintf(fp, "MOV\tR0\tR0\tA\tR1\n"); // stack+1 -> R1 
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "BSR\t*R0\t*R1\tA\t*R0 +cmp\n"); // Math thingy -> *R0
+                fprintf(fp, "ADD\tR0\t1\tA\tR0\n");
+
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+
+            }
+            break;
+        case NOT: ;
+            {
+                (mem->stackDepth)--;
+                fprintf(fp, "// Add two values on the stack, pop one and store result on the stack\n");
+                fprintf(fp, "SUBS\tR0\t1\tA\tR0\n"); // Pop stack, R0 - 1 -> R0
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "NOT\t*R0\t*R0\tA\t*R0 +cmp\n"); // Math thingy -> *R0
+                fprintf(fp, "ADD\tR0\t1\tA\tR0\n");
+
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+
+            }
+            break;
         default:
             yyerror("Unknown request to emit code.\n");
             break;

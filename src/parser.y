@@ -12,15 +12,15 @@
     struct symbol *s;
 }
 
-%token IF ELSE
+%token IF ELSE AND_t OR_t XOR_t BSL_t BSR_t NOT_t
 %token <d> NUMBER
 %token <s> NAME
 
 %type <a> statement statementList codeblock exp
 
 %right '='
-%left '+' '-'
-%nonassoc '|' UMINUS
+%left '+' '-' AND_t OR_t XOR_t BSL_t BSR_t
+%nonassoc '|' UMINUS NOT_t
 
 %initial-action{
     
@@ -48,6 +48,12 @@ statement: NAME '=' exp ';'             { $$ = newasgn($1, $3); }
 
 exp: exp '+' exp                        { $$ = newast('+', $1, $3); }
     | exp '-' exp                       { $$ = newast('-', $1, $3); }
+    | exp AND_t exp                     { $$ = newast('A', $1, $3); }
+    | exp OR_t exp                      { $$ = newast('O', $1, $3); }
+    | exp XOR_t exp                     { $$ = newast('X', $1, $3); }
+    | exp BSL_t exp                     { $$ = newast('R', $1, $3); }
+    | exp BSR_t exp                     { $$ = newast('L', $1, $3); }
+    | NOT_t exp                         { $$ = newast('!', $2, NULL); }
     | '(' exp ')'                       { $$ = $2; }
     | NUMBER                            { $$ = newnum($1); }
     | NAME                              { $$ = newref($1); }

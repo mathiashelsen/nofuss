@@ -13,7 +13,13 @@ enum emitType
     ASSIGN,
     RECALL,
     ADD,
-    SUB
+    SUB,
+    AND,
+    OR,
+    XOR,
+    BSL,
+    BSR,
+    NOT
 };
 
 // Functions to process the AST
