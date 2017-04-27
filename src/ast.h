@@ -19,7 +19,9 @@ enum emitType
     XOR,
     BSL,
     BSR,
-    NOT
+    NOT,
+    DEREF,
+    CREATEPTR
 };
 
 // Functions to process the AST
@@ -27,6 +29,8 @@ struct ast *newast(int nodetype, struct ast *l, struct ast *r);
 struct ast *newnum(int value);
 struct ast *newref(struct symbol *s);
 struct ast *newasgn(struct symbol *s, struct ast *v);
+struct ast *newptr(struct symbol *s);
+struct ast *newdeptr(struct ast *v);
 
 // Evaluates the AST
 void eval_ast(struct ast *a);
@@ -64,6 +68,16 @@ struct symref{
 struct symasgn {
     int nodetype;
     struct symbol *s;
+    struct ast *v;
+};
+
+struct pointer{
+    int nodetype;
+    struct symbol *s;
+};
+
+struct derefPointer{
+    int nodetype;
     struct ast *v;
 };
 

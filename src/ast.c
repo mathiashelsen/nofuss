@@ -73,6 +73,36 @@ struct ast *newasgn(struct symbol *s, struct ast *v)
     return (struct ast*)a;
 }
 
+struct ast *newptr(struct symbol *s)
+{
+    struct pointer *a = malloc(sizeof(struct pointer));
+
+    if(!a) {
+        yyerror("out of space");
+        exit(0);
+    }   
+
+    a->nodetype = '&';
+    a->s = s;
+
+    return (struct ast*)a;
+}
+
+struct ast *newdeptr(struct ast *v)
+{
+    struct derefPointer *a = malloc(sizeof(struct derefPointer));
+    if(!a) {
+        yyerror("out of space");
+        exit(0);
+    }   
+
+    a->nodetype = '*';
+    a->v = v;
+
+    return (struct ast*)a;
+
+}
+
 struct ast *newAstNodeIF(struct ast *cond, struct ast *ifNode,
     struct ast *elseNode)
 {
@@ -131,6 +161,11 @@ void eval_ast(struct ast *a)
                     break;
         case '!':   eval_ast(a->l);
                     emitCode(NOT, a, &mem);
+                    break;
+        case '*':   eval_ast( ((struct derefPointer*)a)->v );
+                    emitCode(DEREF, a, &mem);
+                    break;
+        case '&':   emitCode(CREATEPTR, a, &mem);
                     break;
         case 'N':   emitCode(RECALL, a, &mem);
                     break;

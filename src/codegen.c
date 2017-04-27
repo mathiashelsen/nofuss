@@ -254,6 +254,45 @@ void emitCode(
 
             }
             break;
+        case CREATEPTR: ;
+            {
+            struct symbol *ptr = ((struct pointer *)a)->s; 
+            if(ptr->allocated)
+            {
+                (mem->stackDepth)++;
+                fprintf(fp, "// Adding symbol address on the stack\n");
+                fprintf(fp, "ADD\tR4\t%d\tA\tR1\n", ptr->heapAddr - mem->heapBasePtr);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "MOV\tR0\tR1\tA\t*R0\t+cmp\n");
+                fprintf(fp, "ADD\tR0\t1\tA\tR0\n");
+                fprintf(fp, NOP_STR);
+                fprintf(fp, NOP_STR);
+                fprintf(fp, NOP_STR);
+            }
+            else
+            {
+                yyerror("Symbol was not yet allocated and/or defined.\n");
+            }
+            }
+            break;
+        case DEREF: ;
+            {
+                fprintf(fp, "SUBS\tR0\t1\tA\tR0\n");
+                fprintf(fp, NOP_STR);
+                fprintf(fp, NOP_STR);
+                fprintf(fp, NOP_STR);
+                fprintf(fp, "MOV\tR0\t*R0\tA\tR1\n");
+                fprintf(fp, NOP_STR);
+                fprintf(fp, NOP_STR);
+                fprintf(fp, NOP_STR);
+                fprintf(fp, "MOV\tR0\t*R1\tA\t*R0\n");
+                fprintf(fp, "ADD\tR0\t1\tA\tR0\n");
+                fprintf(fp, NOP_STR);
+                fprintf(fp, NOP_STR);
+                fprintf(fp, NOP_STR);
+            }
+            break;
         default:
             yyerror("Unknown request to emit code.\n");
             break;

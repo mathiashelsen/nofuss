@@ -12,7 +12,7 @@
     struct symbol *s;
 }
 
-%token IF ELSE AND_t OR_t XOR_t BSL_t BSR_t NOT_t
+%token IF ELSE AND_t OR_t XOR_t BSL_t BSR_t NOT_t DEREF_t
 %token <d> NUMBER
 %token <s> NAME
 
@@ -20,7 +20,7 @@
 
 %right '='
 %left '+' '-' AND_t OR_t XOR_t BSL_t BSR_t
-%nonassoc '|' UMINUS NOT_t
+%nonassoc '|' UMINUS NOT_t '&'
 
 %initial-action{
     
@@ -57,10 +57,10 @@ exp: exp '+' exp                        { $$ = newast('+', $1, $3); }
     | '(' exp ')'                       { $$ = $2; }
     | NUMBER                            { $$ = newnum($1); }
     | NAME                              { $$ = newref($1); }
+    | '&' NAME                          { $$ = newptr($2); }
+    | '*' exp                           { $$ = newdeptr($2); }
     ;
 /*
-    | &NAME         { $$ = newptr($1); } -> look up symbol, put address on stack
-        MOV x %d A *R0
     | *(exp)        { $$ = newdeptr($2); } -> calc expression, look up value at
         address=stack, put value on stack
         MOV x *R0 A R1
