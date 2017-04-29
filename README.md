@@ -10,7 +10,7 @@ Does not support:
 - dynamic memory (might be interesting to implement, so lets see in the future)
 
 It will support (hopefully):
-- if/else construction
+- if/else construction (check, done!)
 - while loops
 - pointers to variables
 
