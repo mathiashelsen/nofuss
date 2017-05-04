@@ -167,6 +167,10 @@ void eval_ast(struct ast *a)
                     break;
         case '&':   emitCode(CREATEPTR, a, &mem);
                     break;
+        case '/':   eval_ast( a->r );
+                    eval_ast( a->l );
+                    emitCode(ASSIGN_PTR, a, &mem);
+                    break;
         case 'N':   emitCode(RECALL, a, &mem);
                     break;
         case '=':   eval_ast( ((struct symasgn *)a)->v );

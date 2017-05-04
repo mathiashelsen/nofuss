@@ -15,6 +15,8 @@ EXP ([Ee][-+]?[0-9]+)
 "}" |
 "(" |
 "&" |
+"*" |
+"/" |
 ")"         { return yytext[0]; }
 "&&"        { return AND_t; }
 "||"        { return OR_t; }

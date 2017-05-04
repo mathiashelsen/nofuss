@@ -11,6 +11,7 @@ enum emitType
 {
     DEFINE_LITERAL,
     ASSIGN,
+    ASSIGN_PTR,
     RECALL,
     ADD,
     SUB,

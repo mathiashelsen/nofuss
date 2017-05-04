@@ -43,6 +43,7 @@ statementList:                          { $$ = 0; }
     ;
 
 statement: NAME '=' exp ';'             { $$ = newasgn($1, $3); }
+    | '/' exp '=' exp ';'               { $$ = newast('=', $2,$4); }
     | IF exp codeblock ELSE codeblock   { $$ = newAstNodeIF($2, $3, $5); }
     ;
 

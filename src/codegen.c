@@ -84,6 +84,28 @@ void emitCode(
             }
             break;
 
+        case ASSIGN_PTR: ;
+            {
+                fprintf(fp, "// Going to store value from stack (%d) to address at stack-1\n");
+
+                mem->stackDepth--;
+                
+                fprintf(fp, "SUBS\tR0\t1\tA\tR0\n");
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "MOV\tR0\t*R0\tA\tR1\n");
+                fprintf(fp, "SUBS\tR0\t1\tA\tR0\n");
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "MOV\tR0\t*R0\tA\tR2\n");
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "MOV\tR1\tR2\tA\t*R1 +cmp\n");
+                fprintf(fp, "ADD\tR0\t1\tA\tR0\n");
+                fprintf(fp, "%s", NOP_STR);
+                fprintf(fp, "%s", NOP_STR);
+            }
+            break;
         case RECALL: ;
             {
             struct symbol *ptr = ((struct symref *)a)->s; 
@@ -257,6 +279,7 @@ void emitCode(
         case CREATEPTR: ;
             {
             struct symbol *ptr = ((struct pointer *)a)->s; 
+            printf("Going to create pointer code \n"); 
             if(ptr->allocated)
             {
                 (mem->stackDepth)++;
