@@ -9,12 +9,14 @@ void init_ast()
 
     mem.numberOfIFs     = 0;
 
-    emitInitial(&mem);
+    //emitInitial(&mem);
 }
 
 struct ast *newast(int nodetype, struct ast *l, struct ast *r)
 {
     struct ast *a = malloc(sizeof(struct ast));
+
+	printf("Adding new AST Node\n");
 
     if(!a)
     {
@@ -32,6 +34,7 @@ struct ast *newast(int nodetype, struct ast *l, struct ast *r)
 struct ast *newnum(int value)
 {
     struct numval *a = malloc(sizeof(struct numval));
+	printf("Adding new number Node\n");
 
     if(!a)
     {
@@ -48,6 +51,7 @@ struct ast *newnum(int value)
 struct ast *newref(struct symbol *s)
 {
     struct symref *a = malloc(sizeof(struct symref));
+	printf("Adding new reference Node\n");
 
     if(!a) {
         yyerror("Out of space");
@@ -61,6 +65,7 @@ struct ast *newref(struct symbol *s)
 struct ast *newasgn(struct symbol *s, struct ast *v)
 {
     struct symasgn *a = malloc(sizeof(struct symasgn));
+	printf("Adding new assign Node\n");
 
     if(!a) {
         yyerror("out of space");
@@ -123,7 +128,7 @@ struct ast *newAstNodeIF(struct ast *cond, struct ast *ifNode,
 
 void eval_ast(struct ast *a)
 {
-    //printf("Node type: %c\n", a->nodetype);
+    printf("Node type: %c\n", a->nodetype);
     switch(a->nodetype)
     {
         case '0':   eval_ast(a->l);

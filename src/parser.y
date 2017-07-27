@@ -37,12 +37,11 @@ program
     ;
 
 statementList:                          { $$ = 0; }
-    | statement statementList           { $$ = newast('0', $2, $1); }
+    | statementList statement           { $$ = newast('0', $1, $2); }
     ;
 
 statement
-	: assignStatement					{ $$ = $1; }		
-	| ';'								{ $$ = 0; }
+	: assignStatement ';'				{ $$ = $1; }		
 	;
 
 
@@ -59,21 +58,6 @@ exp: exp '+' exp                        { $$ = newast('+', $1, $3); }
     | NAME                              { $$ = newref($1); }
     ;
 
-//ifStatement
-//	: IF '(' exp ')' codeblock ELSE codeblock   { $$ = newAstNodeIF($3, $5, $7); }
-
 assignStatement
-	: NAME '=' exp ';'					{ $$ = newasgn($1, $3); }
+	: NAME '=' exp						{ $$ = newasgn($1, $3); }
 	;
-
-//    | '&' NAME                          { $$ = newptr($2); }
-//    | '*' exp                           { $$ = newdeptr($2); }
-    ;
-/*
-    | *(exp)        { $$ = newdeptr($2); } -> calc expression, look up value at
-        address=stack, put value on stack
-        MOV x *R0 A R1
-        MOV x *R1 A *R0
-*/
-
-%%
