@@ -13,7 +13,7 @@ OBJECTS = $(SOURCES:.c=.o)
  
 # Main target
 $(EXEC): $(OBJECTS) lexer.l parser.y
-	bison -d parser.y
+	bison -d parser.y --verbose
 	flex -o lexer.lex.c lexer.l
 	$(CC) $(OBJECTS) -o $(EXEC)
 	cp $(EXEC) ../

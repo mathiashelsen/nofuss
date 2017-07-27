@@ -12,40 +12,39 @@
     struct symbol *s;
 }
 
-%token IF ELSE AND_t OR_t XOR_t BSL_t BSR_t NOT_t DEREF_t
+%token IF ELSE 
+%token AND_t OR_t XOR_t BSL_t BSR_t NOT_t DEREF_t
 %token <d> NUMBER
 %token <s> NAME
 
-%type <a> statement statementList codeblock exp
+%type <a> statement statementList assignStatement exp
 
 %right '='
 %left '+' '-' AND_t OR_t XOR_t BSL_t BSR_t
 %nonassoc '|' UMINUS NOT_t '&'
 
+
+%start program
+
 %initial-action{
-    
     init_ast();
 };
 
 %%
 
-program:
-    | program statementList             { eval_ast($2); }
-    ;
-
-codeblock:                              { $$ = 0; }
-    | '{' statementList '}'             { $$ = $2; }
+program
+	: '{' statementList '}'				{ eval_ast($2); }
     ;
 
 statementList:                          { $$ = 0; }
-    | statementList statement           { $$ = newast('0', $1, $2); }
-    | statement                         { $$ = $1; }
+    | statement statementList           { $$ = newast('0', $2, $1); }
     ;
 
-statement: NAME '=' exp ';'             { $$ = newasgn($1, $3); }
-    | '/' exp '=' exp ';'               { $$ = newast('=', $2,$4); }
-    | IF exp codeblock ELSE codeblock   { $$ = newAstNodeIF($2, $3, $5); }
-    ;
+statement
+	: assignStatement					{ $$ = $1; }		
+	| ';'								{ $$ = 0; }
+	;
+
 
 exp: exp '+' exp                        { $$ = newast('+', $1, $3); }
     | exp '-' exp                       { $$ = newast('-', $1, $3); }
@@ -58,8 +57,17 @@ exp: exp '+' exp                        { $$ = newast('+', $1, $3); }
     | '(' exp ')'                       { $$ = $2; }
     | NUMBER                            { $$ = newnum($1); }
     | NAME                              { $$ = newref($1); }
-    | '&' NAME                          { $$ = newptr($2); }
-    | '*' exp                           { $$ = newdeptr($2); }
+    ;
+
+//ifStatement
+//	: IF '(' exp ')' codeblock ELSE codeblock   { $$ = newAstNodeIF($3, $5, $7); }
+
+assignStatement
+	: NAME '=' exp ';'					{ $$ = newasgn($1, $3); }
+	;
+
+//    | '&' NAME                          { $$ = newptr($2); }
+//    | '*' exp                           { $$ = newdeptr($2); }
     ;
 /*
     | *(exp)        { $$ = newdeptr($2); } -> calc expression, look up value at
