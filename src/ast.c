@@ -112,6 +112,7 @@ struct ast *newIfAst(struct ast *cond, struct ast *ifNode,
     struct ast *elseNode)
 {
     struct astNodeIF *a = malloc(sizeof(struct astNodeIF));
+	printf("Adding If AST Node. %p %p %p\n", cond, ifNode, elseNode);
 
     if(!a) {
         yyerror("Out of space");
@@ -128,6 +129,8 @@ struct ast *newIfAst(struct ast *cond, struct ast *ifNode,
 
 void eval_ast(struct ast *a)
 {
+	if( a != NULL )
+	{
     printf("Node type: %c\n", a->nodetype);
     switch(a->nodetype)
     {
@@ -201,5 +204,6 @@ void eval_ast(struct ast *a)
                     break;
         default:    fprintf("Error: unknown nodetype \"%c\" in AST\n", a->nodetype);
                     
-    } 
+    }
+	} 
 }
