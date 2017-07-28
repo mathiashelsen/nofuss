@@ -32,6 +32,8 @@ struct ast *newref(struct symbol *s);
 struct ast *newasgn(struct symbol *s, struct ast *v);
 struct ast *newptr(struct symbol *s);
 struct ast *newdeptr(struct ast *v);
+struct ast *newIfAst(struct ast *cond, struct ast *ifNode,
+    struct ast *elseNode);
 
 // Evaluates the AST
 void eval_ast(struct ast *a);

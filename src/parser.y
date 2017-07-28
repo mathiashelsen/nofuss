@@ -17,7 +17,7 @@
 %token <d> NUMBER
 %token <s> NAME
 
-%type <a> statement statementList assignStatement exp
+%type <a> statement statementList assignStatement ifStatement exp
 
 %right '='
 %left '+' '-' AND_t OR_t XOR_t BSL_t BSR_t
@@ -42,6 +42,7 @@ statementList:                          { $$ = 0; }
 
 statement
 	: assignStatement ';'				{ $$ = $1; }		
+	| ifStatement						{ $$ = $1; }
 	;
 
 
@@ -60,4 +61,8 @@ exp: exp '+' exp                        { $$ = newast('+', $1, $3); }
 
 assignStatement
 	: NAME '=' exp						{ $$ = newasgn($1, $3); }
+	;
+
+ifStatement
+	: IF '(' exp ')' '{' statementList '}' ELSE  '{' statementList '}'	{ $$ = newIfAst($3, $6, $10); }
 	;

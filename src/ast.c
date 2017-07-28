@@ -108,7 +108,7 @@ struct ast *newdeptr(struct ast *v)
 
 }
 
-struct ast *newAstNodeIF(struct ast *cond, struct ast *ifNode,
+struct ast *newIfAst(struct ast *cond, struct ast *ifNode,
     struct ast *elseNode)
 {
     struct astNodeIF *a = malloc(sizeof(struct astNodeIF));
