@@ -17,7 +17,7 @@
 %token <d> NUMBER
 %token <s> NAME
 
-%type <a> statement statementList assignStatement ifStatement exp
+%type <a> statement statementList assignStatement ifStatement derefExp exp
 
 %right '='
 %left '+' '-' AND_t OR_t XOR_t BSL_t BSR_t
@@ -57,10 +57,15 @@ exp: exp '+' exp                        { $$ = newast('+', $1, $3); }
     | '(' exp ')'                       { $$ = $2; }
     | NUMBER                            { $$ = newnum($1); }
     | NAME                              { $$ = newref($1); }
+	| derefExp							{ $$ = $1; }
     ;
 
 assignStatement
 	: NAME '=' exp						{ $$ = newasgn($1, $3); }
+	;
+
+derefExp
+	: '*' '(' exp ')'					{ $$ = newdeptr($3); } // Treat $3 as a memory address and put it on the stack
 	;
 
 ifStatement
