@@ -17,7 +17,7 @@
 %token <d> NUMBER
 %token <s> NAME
 
-%type <a> statement statementList assignStatement ifStatement derefExp exp
+%type <a> statement statementList assignStatement ifStatement derefExp refExp exp
 
 %right '='
 %left '+' '-' AND_t OR_t XOR_t BSL_t BSR_t
@@ -41,7 +41,7 @@ statementList:                          { $$ = 0; }
     ;
 
 statement
-	: assignStatement ';'				{ $$ = $1; }		
+	: assignStatement ';'				{ $$ = $1; }
 	| ifStatement						{ $$ = $1; }
 	;
 
@@ -58,6 +58,7 @@ exp: exp '+' exp                        { $$ = newast('+', $1, $3); }
     | NUMBER                            { $$ = newnum($1); }
     | NAME                              { $$ = newref($1); }
 	| derefExp							{ $$ = $1; }
+	| refExp							{ $$ = $1; }
     ;
 
 assignStatement
@@ -65,7 +66,11 @@ assignStatement
 	;
 
 derefExp
-	: '*' '(' exp ')'					{ $$ = newdeptr($3); } // Treat $3 as a memory address and put it on the stack
+	: '*' '(' exp ')'					{ $$ = newdeptr($3); } // Treat $3 as a memory address and put it's VALUE on the stack
+	;
+
+refExp
+	: '&' '(' NAME ')'					{ $$ = newptr($3); } // Look up the address of the symbol and put it on the stack
 	;
 
 ifStatement
